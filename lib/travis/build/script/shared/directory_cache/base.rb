@@ -184,11 +184,11 @@ module Travis
               sh.with_errexit_off do
                 sh.if "-f #{BIN_PATH}" do
                   sh.if '"$TRAVIS_OS_NAME" = "windows"' do
-                    sh.cmd "#{BIN_PATH} #{command} #{Array(args).join(' ')}", options.merge(echo: false, assert: false)
+                    sh.cmd "#{BIN_PATH} #{command} #{Array(args).join(' ')}", options.merge(echo: debug?, assert: false)
                   end
                   sh.else do
-                    sh.cmd('type rvm &>/dev/null || source ~/.rvm/scripts/rvm', echo: false, assert: false)
-                    sh.cmd "rvm $(travis_internal_ruby) --fuzzy do #{BIN_PATH} #{command} #{Array(args).join(' ')}", options.merge(echo: false, assert: false)
+                    sh.cmd('type rvm &>/dev/null || source ~/.rvm/scripts/rvm', echo: debug?, assert: false)
+                    sh.cmd "rvm $(travis_internal_ruby) --fuzzy do #{BIN_PATH} #{command} #{Array(args).join(' ')}", options.merge(echo: debug?, assert: false)
                   end
                 end
               end
@@ -291,7 +291,6 @@ module Travis
               cmd_opts = {retry: true, assert: false}
               cmd_opts[:echo] = debug? ? true : 'Installing caching utilities'
 
-              sh.cmd
               if casher_branch == 'production'
                 static_file_location = "https://#{app_host}/files/#{name}".untaint
                 sh.cmd curl_cmd(flags, location, static_file_location), cmd_opts
