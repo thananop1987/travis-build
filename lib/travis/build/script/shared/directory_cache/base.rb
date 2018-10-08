@@ -274,8 +274,12 @@ module Travis
               data.cache?(:edge)
             end
 
-            def debug_flags
-              "-v -w '#{CURL_FORMAT}'" if data.cache[:debug]
+            def debug?
+              !!data.cache[:debug]
+            end
+
+            def curl_debug_flags
+              "-v -w '#{CURL_FORMAT}'" if debug?
             end
 
             def app_host
@@ -283,8 +287,11 @@ module Travis
             end
 
             def update_static_file(name, location, remote_location, assert = false)
-              flags = "-sf #{debug_flags}"
-              cmd_opts = {retry: true, assert: false, echo: 'Installing caching utilities'}
+              flags = "-sf #{curl_debug_flags} --retry 3"
+              cmd_opts = {retry: true, assert: false}
+              cmd_opts[:echo] = debug? ? true : 'Installing caching utilities'
+
+              sh.cmd
               if casher_branch == 'production'
                 static_file_location = "https://#{app_host}/files/#{name}".untaint
                 sh.cmd curl_cmd(flags, location, static_file_location), cmd_opts
