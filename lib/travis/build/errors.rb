@@ -61,5 +61,16 @@ module Travis
         '/user/installing-dependencies'
       end
     end
+
+    class WindowsUnsupportedLanguageError < CompilationError
+      def initialize(lang)
+        @msg = "#{lang} is currently not supported on Windows."
+        super
+      end
+
+      def doc_path
+        '/user/reference/windows'
+      end
+    end
   end
 end
