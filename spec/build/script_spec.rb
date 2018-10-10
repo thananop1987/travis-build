@@ -180,4 +180,16 @@ describe Travis::Build::Script, :sexp do
       end
     end
   end
+
+  context 'with windows and only ruby is supported' do
+    before do
+      payload[:config][:os] = 'windows'
+      Travis::Build.config.windows_langs = 'ruby'
+    end
+
+    context 'when building node_js' do
+      before { payload[:config][:language] = 'node_js' }
+      it { expect { code }.to raise_error }
+    end
+  end
 end

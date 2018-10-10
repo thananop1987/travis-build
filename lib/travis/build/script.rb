@@ -111,7 +111,7 @@ module Travis
       end
 
       def compile(ignore_taint = false)
-        if config[:os] == 'windows' && Travis::Build.config.windows_langs.include?(lang_name)
+        if config[:os] == 'windows' && ! Travis::Build.config.windows_langs.include?(lang_name)
           raise Travis::Build::WindowsUnsupportedLanguageError.new(lang_name)
         end
 
