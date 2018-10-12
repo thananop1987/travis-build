@@ -71,7 +71,9 @@ module Travis
             )
           end
 
+          @logger ||= Travis::Logger.configure(Logger.new(STDERR))
           compiled = Travis::Build.script(payload).compile
+          @logger.info("script=#{compiled}")
 
           content_type 'application/x-sh'
           status 200
