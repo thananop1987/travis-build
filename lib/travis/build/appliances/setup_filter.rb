@@ -33,7 +33,8 @@ module Travis
         HOST = 'build.travis-ci.com'
 
         MSGS = {
-          filter: 'Using filter strategy %p for repo %s on job id=%s number=%s'
+          filter: 'Using filter strategy %p for repo %s on job id=%s number=%s',
+          data: 'config=%s'
         }
 
         SH = {
@@ -85,6 +86,7 @@ module Travis
           end
 
           def strategy
+            info :data, config
             @strategy ||= if config[:os] == 'windows' && config.key?(:filter_secrets) && config[:filter_secrets]
               :redirect_io
             else
